@@ -1,5 +1,6 @@
 import express from "express";
 import { authMiddleware } from "./middleware/auth.middleware";
+import leadRoute from "./route/leadRoute";
 
 const app = express();
 
@@ -10,5 +11,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use(authMiddleware);
+
+app.use("/api/leads", leadRoute);
 
 export default app;
