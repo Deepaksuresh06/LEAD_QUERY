@@ -3,6 +3,6 @@ import { getLeads } from "../controller/leadController";
 
 const router = Router();
 
-router.get("/leads", getLeads);
+router.get("/", getLeads);
 
 export default router;
