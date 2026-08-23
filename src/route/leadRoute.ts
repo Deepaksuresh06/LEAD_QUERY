@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { getLeads } from "../controller/leadController";
+import { getLeadsController } from "../controller/leadController";
+import { authMiddleware } from "../middleware/auth.middleware";
+import { validateLeadQuery } from "../middleware/validateLeadQuery";
 
 const router = Router();
 
-router.get("/", getLeads);
+router.get("/", authMiddleware, validateLeadQuery, getLeadsController);
 
 export default router;
