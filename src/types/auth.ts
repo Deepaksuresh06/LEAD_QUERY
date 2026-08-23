@@ -1,7 +1,7 @@
 import { UserRole } from "../generated/prisma/client";
 
 export interface CurrentUser {
-    tenantId: String;
-    userId: String;
+    tenantId: string;
+    userId: string;
     role: UserRole;
 }
