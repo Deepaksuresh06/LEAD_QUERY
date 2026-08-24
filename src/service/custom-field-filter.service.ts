@@ -77,7 +77,7 @@ export const findMatchingLeadIds = async (
     }[]
 ): Promise<string[]> => {
 
-    const matchingLeadIds: string[] = [];
+    let matchingLeadIds: string[] | null = null;
 
     for (const [label, value] of Object.entries(filters)) {
 
@@ -86,7 +86,7 @@ export const findMatchingLeadIds = async (
         );
 
         if (!field) {
-            continue;
+            return [];
         }
 
         const values = await prisma.leadCustomFieldValue.findMany({
@@ -99,10 +99,23 @@ export const findMatchingLeadIds = async (
             },
         });
 
-        matchingLeadIds.push(
-            ...values.map((item) => item.leadId)
+        const currentLeadIds = values.map(
+            (item) => item.leadId
         );
+
+        if (matchingLeadIds === null) {
+            matchingLeadIds = currentLeadIds;
+            continue;
+        }
+
+        matchingLeadIds = matchingLeadIds.filter(
+            (leadId) => currentLeadIds.includes(leadId)
+        );
+
+        if (matchingLeadIds.length === 0) {
+            return [];
+        }
     }
 
-    return matchingLeadIds;
+    return matchingLeadIds ?? [];
 };

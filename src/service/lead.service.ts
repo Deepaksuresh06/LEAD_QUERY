@@ -31,14 +31,10 @@ export const getLeads = async (currentUser: CurrentUser, query: LeadQuery) => {
   });
 
   const customFilters = extractCustomFieldFilters(query);
-  console.log("QUERY:", query);
-  console.log("Custom filters:", customFilters);
 
   const customFields = await findCustomFields( currentUser.tenantId, customFilters );
-  console.log("Custom fields:", customFields);
 
   const matchingLeadIds = await findMatchingLeadIds(customFilters, customFields);
-  console.log("Matching lead IDs:", matchingLeadIds);
 
 
   const finalWhere: Prisma.LeadWhereInput = {
