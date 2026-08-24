@@ -3,6 +3,10 @@ export type LeadFilters = {
     name?: string;
     email?: string;
     phone?: string;
-    createdAt?: string;
-    updatedAt?: string;
+
+    createdAtFrom?: string;
+    createdAtTo?: string;
+
+    updatedAtFrom?: string;
+    updatedAtTo?: string;
 };

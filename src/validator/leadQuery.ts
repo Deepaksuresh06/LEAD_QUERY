@@ -10,8 +10,12 @@ export const leadQuerySchema = z.object({
     name: z.string().optional(),
     email: z.string().optional(),
     phone: z.string().optional(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
+    
+    createdAtFrom: z.string().optional(),
+    createdAtTo: z.string().optional(),
+
+    updatedAtFrom: z.string().optional(),
+    updatedAtTo: z.string().optional(),
 })
 
 export type LeadQuery = z.infer<typeof leadQuerySchema>;

@@ -29,5 +29,37 @@ export const buildLeadFilters = (filters: LeadFilters): Prisma.LeadWhereInput =>
         };
     }
 
+    if (filters.createdAtFrom || filters.createdAtTo) {
+        where.createdAt = {};
+
+        if (filters.createdAtFrom) {
+            where.createdAt.gte = new Date(
+                filters.createdAtFrom
+            );
+        }
+
+        if (filters.createdAtTo) {
+            where.createdAt.lte = new Date(
+                filters.createdAtTo
+            );
+        }
+    }
+
+    if (filters.updatedAtFrom || filters.updatedAtTo) {
+        where.updatedAt = {};
+
+        if (filters.updatedAtFrom) {
+            where.updatedAt.gte = new Date(
+                filters.updatedAtFrom
+            );
+        }
+
+        if (filters.updatedAtTo) {
+            where.updatedAt.lte = new Date(
+                filters.updatedAtTo
+            );
+        }
+    }
+
     return where;
 }
