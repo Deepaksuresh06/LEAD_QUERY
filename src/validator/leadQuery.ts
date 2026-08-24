@@ -16,6 +16,6 @@ export const leadQuerySchema = z.object({
 
     updatedAtFrom: z.string().optional(),
     updatedAtTo: z.string().optional(),
-})
+}).passthrough();
 
 export type LeadQuery = z.infer<typeof leadQuerySchema>;
