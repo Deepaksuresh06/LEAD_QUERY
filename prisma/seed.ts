@@ -187,6 +187,21 @@ async function main() {
 
   console.log("City custom fields created");
 
+  const industryFieldA = await prisma.customField.create({
+      data: {
+          tenantId: tenantA.id,
+          label: "Industry",
+          type: "string",
+      },
+  });
+
+  const industryFieldB = await prisma.customField.create({
+      data: {
+          tenantId: tenantB.id,
+          label: "Industry",
+          type: "string",
+      },
+  });
 
   // =========================
   // 5. EAV VALUES
@@ -224,6 +239,36 @@ async function main() {
         leadId: leadB3.id,
         fieldId: cityFieldB.id,
         value: "Trichy",
+      },
+      {
+          leadId: leadA1.id,
+          fieldId: industryFieldA.id,
+          value: "Finance",
+      },
+      {
+          leadId: leadA2.id,
+          fieldId: industryFieldA.id,
+          value: "IT",
+      },
+      {
+          leadId: leadA3.id,
+          fieldId: industryFieldA.id,
+          value: "Finance",
+      },
+      {
+          leadId: leadB1.id,
+          fieldId: industryFieldB.id,
+          value: "Healthcare",
+      },
+      {
+          leadId: leadB2.id,
+          fieldId: industryFieldB.id,
+          value: "Finance",
+      },
+      {
+          leadId: leadB3.id,
+          fieldId: industryFieldB.id,
+          value: "IT",
       },
     ],
   });
