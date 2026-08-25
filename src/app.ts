@@ -12,6 +12,6 @@ app.get("/health", (req, res) => {
 
 app.use(authMiddleware);
 
-app.use("/api/leads", leadRoute);
+app.use("/api/v1/leads", leadRoute);
 
 export default app;
