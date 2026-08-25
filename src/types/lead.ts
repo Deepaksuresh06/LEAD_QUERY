@@ -1,12 +1,13 @@
-export type LeadFilters = {
-    id?: string;
-    name?: string;
-    email?: string;
-    phone?: string;
+export type FilterFieldType = | "string" | "number" | "date" | "boolean";
 
-    createdAtFrom?: string;
-    createdAtTo?: string;
+export type FilterCondition = | "is" | "is not" | "contain" | "does not contain"
+  | "starts with" | "ends with" | "before" | "after" | "greater than" | "less than"
+  | "is empty" | "is not empty";
 
-    updatedAtFrom?: string;
-    updatedAtTo?: string;
+export type LeadFilter = {
+  fieldId: string;
+  fieldType: FilterFieldType;
+  condition: FilterCondition;
+  value?: string;
+  inputType?: "text" | "select" | "multiselect" | string;
 };
