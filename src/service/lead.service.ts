@@ -15,9 +15,8 @@ export const getLeads = async (
   console.log("BODY:", body);
 
   const visibilityFilter = LeadVisibilityFilter(currentUser);
-
-  const { filters, logic } = body;
   const { page, limit, sortBy, sortDirection } = query;
+  const { q, filters, logic } = body;
 
   const systemFilters = filters
     .filter((filter) =>
@@ -30,20 +29,61 @@ export const getLeads = async (
     )
     .map(buildSystemFilter);
 
-  const filterWhere: Prisma.LeadWhereInput = {};
+  const conditions: Prisma.LeadWhereInput[] = [];
 
   if (systemFilters.length > 0) {
     if (logic === "OR") {
-      filterWhere.OR = systemFilters;
-    } else {
-      filterWhere.AND = systemFilters;
+      conditions.push({
+        OR: systemFilters,
+      });
+    } 
+    else {
+      conditions.push({
+        AND: systemFilters,
+      });
     }
+  }
+
+  if (q && q.length > 0) {
+    conditions.push({
+      OR: [
+        {
+          name: {
+            contains: q,
+            mode: "insensitive",
+          },
+        },
+        {
+          phone: {
+            contains: q,
+            mode: "insensitive",
+          },
+        },
+        {
+          email: {
+            contains: q,
+            mode: "insensitive",
+          },
+        },
+        {
+          e164: {
+            contains: q,
+            mode: "insensitive",
+          },
+        },
+      ],
+    });
   }
 
   const finalWhere: Prisma.LeadWhereInput = {
     ...visibilityFilter,
-    ...filterWhere,
   };
+
+  if (conditions.length > 0) {
+    finalWhere.AND = conditions;
+  }
+
+  console.log("FINAL WHERE:", finalWhere);
 
   const leads = await prisma.lead.findMany({
     where: finalWhere,
@@ -59,4 +99,3 @@ export const getLeads = async (
 
   return leads;
 };
-

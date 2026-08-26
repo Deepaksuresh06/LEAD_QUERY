@@ -29,7 +29,7 @@ const leadFilterSchema = z.object({
 });
 
 export const queryLeadsBodySchema = z.object({
-  q: z.string().optional(),
+  q: z.string().trim().optional(),
 
   logic: z
     .enum(["AND", "OR"])
@@ -40,6 +40,4 @@ export const queryLeadsBodySchema = z.object({
     .default([]),
 });
 
-export type QueryLeadsBody = z.infer<
-  typeof queryLeadsBodySchema
->;
+export type QueryLeadsBody = z.infer< typeof queryLeadsBodySchema >;
