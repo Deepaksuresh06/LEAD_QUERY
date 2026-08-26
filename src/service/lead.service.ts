@@ -5,6 +5,7 @@ import { LeadQuery } from "../validator/leadQuery";
 import { QueryLeadsBody } from "../validator/queryLeadsBody";
 import { buildSystemFilter } from "./system-filter.service";
 import { Prisma } from "../generated/prisma/client";
+import { buildCustomFilter } from "./custom-filter.service";
 
 export const getLeads = async (
   currentUser: CurrentUser,
@@ -29,50 +30,41 @@ export const getLeads = async (
     )
     .map(buildSystemFilter);
 
+  const customFilters = filters.filter(
+    (filter) =>
+      ![
+        "name",
+        "email",
+        "assignedTo",
+        "followUpDate",
+      ].includes(filter.fieldId)
+  );
+
+  const customFilterConditions = await Promise.all(
+    customFilters.map((filter) =>
+      buildCustomFilter(currentUser.tenantId, filter)
+    )
+  );
+
   const conditions: Prisma.LeadWhereInput[] = [];
 
-  if (systemFilters.length > 0) {
-    if (logic === "OR") {
+  if (logic === "OR") {
+    const filterConditions = [
+      ...systemFilters,
+      ...customFilterConditions,
+    ];
+
+    if (filterConditions.length > 0) {
       conditions.push({
-        OR: systemFilters,
-      });
-    } 
-    else {
-      conditions.push({
-        AND: systemFilters,
+        OR: filterConditions,
       });
     }
-  }
-
-  if (q && q.trim().length > 0) {
-    conditions.push({
-      OR: [
-        {
-          name: {
-            contains: q,
-            mode: "insensitive",
-          },
-        },
-        {
-          phone: {
-            contains: q,
-            mode: "insensitive",
-          },
-        },
-        {
-          email: {
-            contains: q,
-            mode: "insensitive",
-          },
-        },
-        {
-          e164: {
-            contains: q,
-            mode: "insensitive",
-          },
-        },
-      ],
-    });
+  } 
+  else {
+    conditions.push(
+      ...systemFilters,
+      ...customFilterConditions
+    );
   }
 
   const finalWhere: Prisma.LeadWhereInput = {

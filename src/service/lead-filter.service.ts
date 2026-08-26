@@ -1,7 +1,7 @@
 import { Prisma } from "../generated/prisma/client";
-import { LeadFilters } from "../types/lead";
+import { LeadFilter } from "../types/lead";
 
-export const buildLeadFilters = (filters: LeadFilters): Prisma.LeadWhereInput => {
+export const buildLeadFilters = (filters: LeadFilter): Prisma.LeadWhereInput => {
     const where: Prisma.LeadWhereInput = {};
 
     if(filters.id) {

@@ -40,4 +40,6 @@ export const queryLeadsBodySchema = z.object({
     .default([]),
 });
 
-export type QueryLeadsBody = z.infer< typeof queryLeadsBodySchema >;
+export type QueryLeadsBody = z.infer<typeof queryLeadsBodySchema>;
+
+export type LeadFilter = z.infer<typeof leadFilterSchema>;
