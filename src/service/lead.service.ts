@@ -67,6 +67,37 @@ export const getLeads = async (
     );
   }
 
+  if (q && q.trim().length > 0) {
+    conditions.push({
+      OR: [
+        {
+          name: {
+            contains: q.trim(),
+            mode: "insensitive",
+          },
+        },
+        {
+          phone: {
+            contains: q.trim(),
+            mode: "insensitive",
+          },
+        },
+        {
+          email: {
+            contains: q.trim(),
+            mode: "insensitive",
+          },
+        },
+        {
+          e164: {
+            contains: q.trim(),
+            mode: "insensitive",
+          },
+        },
+      ],
+    });
+  }
+
   const finalWhere: Prisma.LeadWhereInput = {
     ...visibilityFilter,
   };
