@@ -1,12 +1,22 @@
 import { Prisma } from "../generated/prisma/client";
 import { prisma } from "../lib/prisma";
 import { LeadFilter } from "../validator/queryLeadsBody";
+import { validate as isUUID } from "uuid";
 
 export const buildCustomFilter = async (
   tenantId: string,
   filter: LeadFilter
 ): Promise<Prisma.LeadWhereInput> => {
 
+
+  if (!isUUID(filter.fieldId)) {
+    return {
+      id: {
+        in: [],
+      },
+    };
+  }
+  
   const field = await prisma.customField.findFirst({
     where: {
       id: filter.fieldId,
