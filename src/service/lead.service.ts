@@ -92,10 +92,37 @@ export const getLeads = async (
     })
   ]);
 
+
+const leadIds = leads.map((lead) => lead.id);
+
+const customFieldValues = (leadIds.length > 0) ? await prisma.leadCustomFieldValue.findMany({
+        where: {
+          leadId: {
+            in: leadIds,
+          },
+        },
+        include: {
+          field: true,
+        },
+      })
+    : [];
+
+  const hydratedLeads = leads.map((lead) => ({
+    ...lead,
+
+    customFields: customFieldValues
+      .filter((item) => item.leadId === lead.id)
+      .map((item) => ({
+        fieldId: item.fieldId,
+        label: item.field.label,
+        value: item.value,
+      })),
+  }));
+
   const totalPages = Math.ceil(totalCount / limit);
 
   return {
-    leads,
+    leads: hydratedLeads,
     totalCount,
     totalPages,
   };
