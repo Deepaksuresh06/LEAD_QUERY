@@ -44,7 +44,7 @@ export const getLeads = async (
     }
   }
 
-  if (q && q.length > 0) {
+  if (q && q.trim().length > 0) {
     conditions.push({
       OR: [
         {
@@ -85,17 +85,26 @@ export const getLeads = async (
 
   console.log("FINAL WHERE:", finalWhere);
 
-  const leads = await prisma.lead.findMany({
-    where: finalWhere,
+  const [ leads, totalCount ] = await Promise.all([
+    prisma.lead.findMany({
+      where: finalWhere,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: {
+        [sortBy]: sortDirection,
+      },
+    }),
 
-    skip: (page - 1) * limit,
+    prisma.lead.count({
+      where: finalWhere,
+    })
+  ]);
 
-    take: limit,
+  const totalPages = Math.ceil(totalCount / limit);
 
-    orderBy: {
-      [sortBy]: sortDirection,
-    },
-  });
-
-  return leads;
+  return {
+    leads,
+    totalCount,
+    totalPages,
+  };
 };
