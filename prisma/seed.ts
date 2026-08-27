@@ -90,6 +90,7 @@ async function main() {
       countryCode: "+91",
       e164: "+919876543210",
       email: "arun@example.com",
+      followUpDate: new Date("2026-08-10"),
     },
   });
 
@@ -104,6 +105,7 @@ async function main() {
       countryCode: "+91",
       e164: "+919876543211",
       email: "bala@example.com",
+      followUpDate: new Date("2026-08-05"),
     },
   });
 
@@ -117,9 +119,9 @@ async function main() {
       countryCode: "+91",
       e164: "+919876543212",
       email: "karthik@example.com",
+      followUpDate: new Date("2026-08-20"),
     },
   });
-
 
   const leadB1 = await prisma.lead.create({
     data: {
@@ -132,6 +134,7 @@ async function main() {
       countryCode: "+91",
       e164: "+919876543220",
       email: "rahul@example.com",
+      followUpDate: new Date("2026-08-01"),
     },
   });
 
@@ -146,6 +149,7 @@ async function main() {
       countryCode: "+91",
       e164: "+919876543221",
       email: "vijay@example.com",
+      followUpDate: new Date("2026-08-15"),
     },
   });
 
@@ -159,6 +163,7 @@ async function main() {
       countryCode: "+91",
       e164: "+919876543222",
       email: "suresh@example.com",
+      followUpDate: null,
     },
   });
 

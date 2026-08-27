@@ -12,9 +12,6 @@ export const getLeads = async (
   query: LeadQuery,
   body: QueryLeadsBody
 ) => {
-  console.log("QUERY:", query);
-  console.log("BODY:", body);
-
   const visibilityFilter = LeadVisibilityFilter(currentUser);
   const { page, limit, sortBy, sortDirection } = query;
   const { q, filters, logic } = body;
@@ -59,8 +56,7 @@ export const getLeads = async (
         OR: filterConditions,
       });
     }
-  } 
-  else {
+  } else {
     conditions.push(
       ...systemFilters,
       ...customFilterConditions
@@ -106,9 +102,7 @@ export const getLeads = async (
     finalWhere.AND = conditions;
   }
 
-  console.log("FINAL WHERE:", finalWhere);
-
-  const [ leads, totalCount ] = await Promise.all([
+  const [leads, totalCount] = await Promise.all([
     prisma.lead.findMany({
       where: finalWhere,
       skip: (page - 1) * limit,
@@ -120,23 +114,24 @@ export const getLeads = async (
 
     prisma.lead.count({
       where: finalWhere,
-    })
+    }),
   ]);
 
+  const leadIds = leads.map((lead) => lead.id);
 
-const leadIds = leads.map((lead) => lead.id);
-
-const customFieldValues = (leadIds.length > 0) ? await prisma.leadCustomFieldValue.findMany({
-        where: {
-          leadId: {
-            in: leadIds,
+  const customFieldValues =
+    leadIds.length > 0
+      ? await prisma.leadCustomFieldValue.findMany({
+          where: {
+            leadId: {
+              in: leadIds,
+            },
           },
-        },
-        include: {
-          field: true,
-        },
-      })
-    : [];
+          include: {
+            field: true,
+          },
+        })
+      : [];
 
   const hydratedLeads = leads.map((lead) => ({
     ...lead,
